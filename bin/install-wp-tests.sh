@@ -124,15 +124,6 @@ install_test_suite() {
 
 }
 
-install_dependency_plugins() {
-
-#  if [ ! -d "$WP_CORE_DIR"/wp-content/plugins/plugin-1 ]; then
-#	  download https://downloads.wordpress.org/plugin/plugin-1.zip /tmp/plugin-1.zip
-#		unzip /tmp/plugin-1.zip -d "$WP_CORE_DIR"/wp-content/plugins/
-#  fi
-
-}
-
 install_db() {
 
 	if [ ${SKIP_DB_CREATE} = "true" ]; then
@@ -161,5 +152,4 @@ install_db() {
 
 install_wp
 install_test_suite
-install_dependency_plugins
 install_db

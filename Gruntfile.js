@@ -11,12 +11,12 @@ module.exports = function ( grunt ) {
 					domainPath: 'languages/', // Where to save the POT file.
 					exclude: [ 'node_modules/*', '.phpintel/*' ], // List of files or directories to ignore.
 					mainFile: 'plugin.php', // Main project file.
-					potFilename: 'wp-plugin-template.pot', // Name of the POT file.
+					potFilename: 'user-approval.pot', // Name of the POT file.
 					potHeaders: { // Headers to add to the generated POT file.
 						poedit: true, // Includes common Poedit headers.
 						'Last-Translator': 'Rahul Prajapati <rahul.prajapati@live.in>',
 						'Language-Team': 'Dev',
-						'report-msgid-bugs-to': 'https://github.com/rahulsprajapati/wp-plugin-template/issues',
+						'report-msgid-bugs-to': 'https://github.com/rahulsprajapati/user-approval/issues',
 						'x-poedit-keywordslist': true, // Include a list of all possible gettext functions.
 					},
 					type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).

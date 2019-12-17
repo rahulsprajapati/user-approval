@@ -1,3 +1,3 @@
-WP Plugin Template
+User Approval
 ======================
-WP Plugin Template Description. 
+Approval/block user account for new registered users based on default user role.

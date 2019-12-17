@@ -1,6 +1,6 @@
 {
-  "name": "rahulsprajapati/wp-plugin-template",
-  "description": "wp-plugin-template",
+  "name": "rahulsprajapati/user-approval",
+  "description": "user-approval",
   "authors": [
     {
       "name": "Rahul Prajapati",
@@ -11,10 +11,10 @@
   ],
   "type": "wordpress-plugin",
   "prefer-stable": true,
-  "homepage": "https://github.com/rahulsprajapati/wp-plugin-template",
+  "homepage": "https://github.com/rahulsprajapati/user-approval",
   "support": {
-    "issues": "https://github.com/rahulsprajapati/wp-plugin-template/issues",
-    "source": "https://github.com/rahulsprajapati/wp-plugin-template/"
+    "issues": "https://github.com/rahulsprajapati/user-approval/issues",
+    "source": "https://github.com/rahulsprajapati/user-approval/"
   },
   "minimum-stability": "dev",
   "require-dev": {

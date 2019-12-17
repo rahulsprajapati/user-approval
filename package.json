@@ -1,11 +1,11 @@
 {
 	"author": "Rahul Prajapati",
-	"name": "wp-plugin-template",
+	"name": "user-approval",
 	"version": "1.0.0",
 	"license": "GPL-3.0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/rahulsprajapati/wp-plugin-template"
+		"url": "https://github.com/rahulsprajapati/user-approval"
 	},
 	"browserslist": [
 		"last 2 versions",
