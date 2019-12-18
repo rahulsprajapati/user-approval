@@ -15,7 +15,7 @@ SKIP_DB_CREATE=${6-false}
 TMPDIR=${TMPDIR-/tmp}
 TMPDIR=$(echo $TMPDIR | sed -e "s/\/$//")
 WP_TESTS_DIR=${WP_TESTS_DIR-$TMPDIR/wordpress-tests-lib}
-WP_CORE_DIR=${WP_CORE_DIR-$TMPDIR/wordpress/}
+WP_CORE_DIR=${WP_CORE_DIR-$TMPDIR/wordpress}
 
 download() {
     if [ `which curl` ]; then
@@ -51,11 +51,10 @@ else
 	fi
 	WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
-set -ex
 
 install_wp() {
 
-	if [ -d $WP_CORE_DIR ]; then
+	if [ -d $WP_CORE_DIR/wp-admin ]; then
 		return;
 	fi
 
@@ -107,9 +106,17 @@ install_test_suite() {
 	if [ ! -d $WP_TESTS_DIR ]; then
 		# set up testing suite
 		mkdir -p $WP_TESTS_DIR
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
 	fi
+
+  # set up testing suite if it doesn't yet exist
+	if [ ! -d $WP_TESTS_DIR/includes ]; then
+	  svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+  fi
+
+  # set up testing suite if it doesn't yet exist
+	if [ ! -d $WP_TESTS_DIR/data ]; then
+	  svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+  fi
 
 	if [ ! -f wp-tests-config.php ]; then
 		download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR"/wp-tests-config.php
@@ -146,8 +153,11 @@ install_db() {
 		fi
 	fi
 
-	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	# Create database if it does not exist.
+	if ! mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA -e "use $DB_NAME" > /dev/null 2>&1; then
+		echo 'Creating Test Database'
+		mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	fi
 }
 
 install_wp

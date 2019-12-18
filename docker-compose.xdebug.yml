@@ -1,0 +1,6 @@
+version: "3"
+
+services:
+  wordpress_phpunit:
+    volumes:
+      - "./.docker/config/phpunit/xdebug-enable.ini:/etc/php7/conf.d/xdebug-enable.ini:ro"
