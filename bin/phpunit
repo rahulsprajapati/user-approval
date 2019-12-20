@@ -8,7 +8,6 @@ IFS=$'\n\t'
 COVERAGE_REPORT=0
 if [ "${1:-0}" = "--coverage-report" ]; then
   COVERAGE_REPORT=1
-  print_message "💬 Running with generating coverage report..."
 
   # Remove/unset --coverage-report arg.
   set -- "${@:1:$(($#-1))}"
