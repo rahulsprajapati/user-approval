@@ -37,7 +37,7 @@ docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit /var/www
 if [ $COVERAGE_REPORT = 1 ]; then
   print_message "💬 Running PHPUnit Tests With Generating Coverage report..."
   docker-compose -f docker-compose.phpunit.yml -f docker-compose.xdebug.yml run --rm wordpress_phpunit \
-		phpunit -c /var/www/app/phpunit.xml.dist --coverage-html=/var/www/app/tests/coverage/html --debug --verbose $@
+		phpunit -c /var/www/app/phpunit.xml.dist --coverage-clover=/var/www/app/clover.xml --coverage-html=/var/www/app/tests/coverage/html --debug --verbose $@
 
 	print_message "💬 Coverage report is generated inside tests/coverage/ dir..."
 else
