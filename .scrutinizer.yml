@@ -115,8 +115,6 @@ filter:
     - 'tests/'
   dependency_paths:
     - wordpress/
-    - cmb2/
-    - brightcove-video-connect/
 
 checks:
   php:
