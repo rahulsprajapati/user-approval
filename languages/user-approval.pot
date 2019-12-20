@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: User Approval 1.0.0\n"
 "Report-Msgid-Bugs-To: "
 "https://github.com/rahulsprajapati/user-approval/issues\n"
-"POT-Creation-Date: 2019-12-17 12:03:31+00:00\n"
+"POT-Creation-Date: 2019-12-20 08:39:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,91 +25,95 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: inc/authenticate.php:55
+#: inc/authenticate.php:56
 msgid "<strong>ERROR</strong>: Your account is not active."
 msgstr ""
 
-#: inc/authenticate.php:78
+#: inc/authenticate.php:79
 msgid "<strong>ERROR</strong>: Your account access has been blocked to this site."
 msgstr ""
 
-#: inc/authenticate.php:85
+#: inc/authenticate.php:86
 msgid "<strong>ERROR</strong>: Your account is still pending approval."
 msgstr ""
 
-#: inc/management.php:44
+#: inc/management.php:47
 msgid "Status"
 msgstr ""
 
-#: inc/management.php:184
+#: inc/management.php:188
 #. translators: %s: User login.
 msgid "You have been approved to access %s"
 msgstr ""
 
-#: inc/management.php:191
+#: inc/management.php:195
 #. translators: Login details notification email subject. %s: Site title.
 msgid "[%s] Login Details [Account Approved]"
 msgstr ""
 
-#: inc/management.php:207
+#: inc/management.php:211
 #. translators: %s: Site title.
 msgid "You have been denied access to %s."
 msgstr ""
 
-#: inc/management.php:213
+#: inc/management.php:217
 #. translators: %s: Site title.
 msgid "[%s] Account Blocked."
 msgstr ""
 
-#: inc/management.php:258
+#: inc/management.php:262
 msgid "All"
 msgstr ""
 
-#: inc/namespace.php:93
+#: inc/namespace.php:94
 msgid "Pre Approved"
 msgstr ""
 
-#: inc/namespace.php:94
+#: inc/namespace.php:95
 msgid "Pending"
 msgstr ""
 
-#: inc/namespace.php:95
+#: inc/namespace.php:96
 msgid "Approve"
 msgstr ""
 
-#: inc/namespace.php:96
+#: inc/namespace.php:97
 msgid "Block"
 msgstr ""
 
-#: inc/registration.php:78
+#: inc/registration.php:77 tests/class-test-registration.php:149
 #. translators: 1: User role label, 2: Site title.
 msgid "New %1$s registration on your site %2$s:"
 msgstr ""
 
-#: inc/registration.php:87
+#: inc/registration.php:86
 #. translators: %s: User login.
 msgid "Username: %s"
 msgstr ""
 
-#: inc/registration.php:95
+#: inc/registration.php:94
 #. translators: %s: User email address.
 msgid "Email: %s"
 msgstr ""
 
-#: inc/registration.php:102
+#: inc/registration.php:101
 #. translators: New user registration notification email subject. %s: Site
 #. title.
 msgid "[%s] New Contributor Registration"
 msgstr ""
 
-#: inc/registration.php:125
+#: inc/registration.php:124
 msgid "An email has been sent to the site administrator for account verification."
 msgstr ""
 
-#: inc/registration.php:129
+#: inc/registration.php:128
 msgid ""
 "You will receive an email once your account is reviewed. Thanks for your "
 "patience."
+msgstr ""
+
+#: tests/class-test-authenticate.php:86
+msgid "<strong>ERROR</strong>: Test Error"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
