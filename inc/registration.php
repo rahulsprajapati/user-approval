@@ -7,8 +7,7 @@
 
 namespace User_Approval\Registration;
 
-use WP_Error;
-use WP_User;
+use function User_Approval\filter_input;
 use function User_Approval\get_default_user_role;
 use function User_Approval\get_role_names;
 use function User_Approval\is_default_role_user;

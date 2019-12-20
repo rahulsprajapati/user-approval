@@ -7,9 +7,12 @@
 
 namespace User_Approval\Management;
 
-use WP_User;
+use function User_Approval\filter_input;
 use function User_Approval\get_default_user_role;
+use function User_Approval\get_pre_approved_user_roles;
 use function User_Approval\get_user_status;
+
+use WP_User;
 
 const APPROVE_STATUS_NONCE = 'aj-user-approve';
 const BLOCKED_STATUS_NONCE = 'aj-user-blocked';
@@ -41,7 +44,7 @@ function bootstrap() {
  */
 function user_verification_column( $columns ) {
 
-	$columns[ 'aj_user_status' ] = esc_html__( 'Status', 'user-approval' );
+	$columns['aj_user_status'] = esc_html__( 'Status', 'user-approval' );
 
 	return $columns;
 }
@@ -140,6 +143,7 @@ function aj_user_status_update() {
 		! $user instanceof WP_User
 		|| ! in_array( get_default_user_role(), $user->roles )
 		|| ( $status === $user_status ) // Avoid any refresh page.
+		|| ! current_user_can( 'list_users' )
 	) {
 		return;
 	}
@@ -173,7 +177,7 @@ function aj_user_status_update() {
  *
  * @return array Updated email data for wp_mail.
  */
-function update_approved_new_user_email( $email_data, $user, $blogname  ) {
+function update_approved_new_user_email( $email_data, $user, $blogname ) {
 
 	if ( empty( $user ) || ! in_array( get_default_user_role(), $user->roles ) ) {
 		return $email_data;
@@ -188,8 +192,8 @@ function update_approved_new_user_email( $email_data, $user, $blogname  ) {
 	$message .= $email_data['message'];
 
 	/* translators: Login details notification email subject. %s: Site title. */
-	$email_data[ 'subject' ] = esc_html__( '[%s] Login Details [Account Approved]', 'user-approval' );
-	$email_data[ 'message' ] = $message;
+	$email_data['subject'] = esc_html__( '[%s] Login Details [Account Approved]', 'user-approval' );
+	$email_data['message'] = $message;
 
 	return apply_filters( 'user_approval_approved_user_email_data', $email_data );
 }
@@ -223,7 +227,7 @@ function send_user_blocked_email( $user ) {
 
 	$email_data = apply_filters( 'user_approval_blocked_user_email_data', $email_data );
 
-	// phpcs:ignore WordPressVIPMinimum.VIP.RestrictedFunctions.wp_mail_wp_mail
+	// phpcs:ignore WordPressVIPMinimum.VIP.RestrictedFunctions.wp_mail_wp_mail, WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
 	wp_mail(
 		$email_data['to'],
 		wp_specialchars_decode( $email_data['subject'] ),
@@ -299,15 +303,13 @@ function filter_user_list_by_status( $args ) {
 
 	if ( in_array( $status, [ 'blocked', 'approved' ] ) ) {
 		$args['meta_key']   = 'aj_user_status'; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
-		$args['meta_value'] = $status; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_value
+		$args['meta_value'] = $status; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_value, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 	} elseif ( 'pending' === $status ) {
 		$args['role']         = get_default_user_role();
 		$args['meta_key']     = 'aj_user_status'; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
 		$args['meta_compare'] = 'NOT EXISTS';
 	} else {
-		$user_roles_obj  = wp_roles();
-		$user_roles_data = $user_roles_obj->roles ?? [];
-		unset( $user_roles_data[ get_default_user_role() ] );
+		$user_roles_data = get_pre_approved_user_roles();
 
 		if ( ! empty( $user_roles_data ) ) {
 			$args['role__in'] = array_keys( $user_roles_data );
