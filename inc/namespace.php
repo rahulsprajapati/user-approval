@@ -108,10 +108,10 @@ function get_user_status( $status = '' ) {
  * This method is an improved version of PHP's filter_input() and
  * works well on PHP Cli as well which PHP default method does not.
  *
- * @param int $type One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV
- * @param string $variable_name Name of a variable to get
- * @param int $filter The ID of the filter to apply
- * @param mixed $options filter to apply
+ * @param int    $type One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
+ * @param string $variable_name Name of a variable to get.
+ * @param int    $filter The ID of the filter to apply.
+ * @param mixed  $options filter to apply.
  *
  * @codeCoverageIgnore
  *
