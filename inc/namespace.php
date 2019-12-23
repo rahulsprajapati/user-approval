@@ -126,10 +126,10 @@ function filter_input( $type, $variable_name, $filter = FILTER_DEFAULT, $options
 		 */
 		switch ( $filter ) {
 			case FILTER_SANITIZE_STRING:
-				$sanitized_variable = sanitize_text_field( filter_input( $type, $variable_name, $filter ) );
+				$sanitized_variable = sanitize_text_field( \filter_input( $type, $variable_name, $filter ) );
 				break;
 			default:
-				$sanitized_variable = filter_input( $type, $variable_name, $filter, $options );
+				$sanitized_variable = \filter_input( $type, $variable_name, $filter, $options );
 				break;
 		}
 
