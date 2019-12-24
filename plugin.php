@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/rahulsprajapati/user-approval
  * Description: Approval/block user account for new registered users.
  * Author: Rahul Prajapati
- * Version: 1.0.0
+ * Version: 0.0.1
  * Author URI: https://github.com/rahulsprajapati
  * License: GPL2+
  * Text Domain: user-approval
