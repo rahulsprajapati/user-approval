@@ -43,7 +43,7 @@ function block_non_approved_user_request( $errors ) {
 
 	if (
 		! $user instanceof WP_User
-		|| ! in_array( get_default_user_role(), $user->roles )
+		|| ! in_array( get_default_user_role(), $user->roles, true )
 	) {
 		return;
 	}

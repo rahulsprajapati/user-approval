@@ -52,7 +52,7 @@ function is_default_role_user( $user ) {
 
 	return (
 		$user instanceof WP_User
-		&& in_array( get_default_user_role(), $user->roles )
+		&& in_array( get_default_user_role(), $user->roles, true )
 	);
 }
 

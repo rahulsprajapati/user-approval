@@ -66,7 +66,7 @@ function add_user_verification_status( $val, $column_name, $user_id ) {
 
 	$user_status = get_user_meta( $user_id, 'aj_user_status', true ) ?: 'pending';
 	$user        = get_userdata( $user_id );
-	$user_status = ( ! empty( $user ) && in_array( get_default_user_role(), $user->roles ) ) ? $user_status : 'pre-approved';
+	$user_status = ( ! empty( $user ) && in_array( get_default_user_role(), $user->roles, true ) ) ? $user_status : 'pre-approved';
 
 	return get_user_status( $user_status );
 }
@@ -81,7 +81,7 @@ function add_user_verification_status( $val, $column_name, $user_id ) {
  */
 function add_user_verification_action( $actions, $user ) {
 
-	if ( ! in_array( get_default_user_role(), $user->roles ) ) {
+	if ( ! in_array( get_default_user_role(), $user->roles, true ) ) {
 		return $actions;
 	}
 
@@ -141,7 +141,7 @@ function aj_user_status_update() {
 
 	if (
 		! $user instanceof WP_User
-		|| ! in_array( get_default_user_role(), $user->roles )
+		|| ! in_array( get_default_user_role(), $user->roles, true )
 		|| ( $status === $user_status ) // Avoid any refresh page.
 		|| ! current_user_can( 'list_users' )
 	) {
@@ -179,7 +179,7 @@ function aj_user_status_update() {
  */
 function update_approved_new_user_email( $email_data, $user, $blogname ) {
 
-	if ( empty( $user ) || ! in_array( get_default_user_role(), $user->roles ) ) {
+	if ( empty( $user ) || ! in_array( get_default_user_role(), $user->roles, true ) ) {
 		return $email_data;
 	}
 
@@ -301,7 +301,7 @@ function filter_user_list_by_status( $args ) {
 		return $args;
 	}
 
-	if ( in_array( $status, [ 'blocked', 'approved' ] ) ) {
+	if ( in_array( $status, [ 'blocked', 'approved' ], true ) ) {
 		$args['meta_key']   = 'aj_user_status'; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
 		$args['meta_value'] = $status; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_value, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 	} elseif ( 'pending' === $status ) {
