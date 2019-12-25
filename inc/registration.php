@@ -36,10 +36,7 @@ function bootstrap() {
 function send_notification_to_allowed_users( $user_id ) {
 	$user = get_userdata( $user_id );
 
-	if (
-		! empty( $user )
-		&& is_default_role_user( $user )
-	) {
+	if ( is_default_role_user( $user ) ) {
 		wp_send_new_user_notifications( $user_id, 'admin' );
 		return;
 	}
@@ -50,7 +47,7 @@ function send_notification_to_allowed_users( $user_id ) {
 /**
  * Send a notification/email to admin when user register.
  *
- * @param array   $email_data {
+ * @param array    $email_data {
  *     Used to build wp_mail().
  *
  *     @type string $to      The intended recipient - New user email address.
@@ -58,14 +55,14 @@ function send_notification_to_allowed_users( $user_id ) {
  *     @type string $message The body of the email.
  *     @type string $headers The headers of the email.
  * }
- * @param WP_User $user     User object for new user.
- * @param string  $blogname The site title.
+ * @param \WP_User $user     User object for new user.
+ * @param string   $blogname The site title.
  *
  * @return array Updated email data for wp_mail.
  */
 function update_new_user_admin_email( $email_data, $user, $blogname ) {
 
-	if ( empty( $user ) || ! is_default_role_user( $user ) ) {
+	if ( ! is_default_role_user( $user ) ) {
 		return $email_data;
 	}
 
@@ -107,14 +104,14 @@ function update_new_user_admin_email( $email_data, $user, $blogname ) {
 /**
  * Add a message after registration about account is being sent for verification.
  *
- * @param WP_Error $errors WP Error object.
+ * @param \WP_Error $errors WP Error object.
  *
- * @return WP_Error
+ * @return \WP_Error
  */
 function update_registered_user_message( $errors ) {
 	$checkemail = filter_input( INPUT_GET, 'checkemail', FILTER_SANITIZE_STRING );
 
-	if ( empty( $checkemail ) || 'registered' !== $checkemail ) {
+	if ( 'registered' !== $checkemail ) {
 		return $errors;
 	}
 
