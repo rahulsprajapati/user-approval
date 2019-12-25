@@ -11,8 +11,8 @@ use User_Approval\Management;
 use WP_UnitTestCase;
 use function User_Approval\get_pre_approved_user_roles;
 use function User_Approval\get_user_status;
-use const User_Approval\Management\APPROVE_STATUS_NONCE;
-use const User_Approval\Management\BLOCKED_STATUS_NONCE;
+use const User_Approval\STATUS_APPROVED_NONCE;
+use const User_Approval\STATUS_BLOCKED_NONCE;
 
 /**
  * User_Approval\Management test case.
@@ -140,20 +140,20 @@ class Test_Management extends WP_UnitTestCase {
 		$query_args = [
 			'user'   => $user_id,
 			'action' => 'aj_user_status',
-			'status' => 'approve',
+			'status' => 'approved',
 		];
 
 		// Approve action link.
 		$approve_link = add_query_arg( $query_args );
 		$approve_link = remove_query_arg( [ 'new_role' ], $approve_link );
-		$approve_link = wp_nonce_url( $approve_link, APPROVE_STATUS_NONCE );
+		$approve_link = wp_nonce_url( $approve_link, STATUS_APPROVED_NONCE );
 
-		$query_args['status'] = 'block';
+		$query_args['status'] = 'blocked';
 
 		// Block action link.
 		$block_link = add_query_arg( $query_args );
 		$block_link = remove_query_arg( [ 'new_role' ], $block_link );
-		$block_link = wp_nonce_url( $block_link, BLOCKED_STATUS_NONCE );
+		$block_link = wp_nonce_url( $block_link, STATUS_BLOCKED_NONCE );
 
 		$approve_action = sprintf(
 			'<a href="%s">%s</a>',
@@ -228,8 +228,8 @@ class Test_Management extends WP_UnitTestCase {
 		$this->assertEmpty( $user_status );
 
 		$_GET['user']         = self::$contributor->ID;
-		$_GET['status']       = 'block';
-		$_REQUEST['_wpnonce'] = wp_create_nonce( BLOCKED_STATUS_NONCE );
+		$_GET['status']       = 'blocked';
+		$_REQUEST['_wpnonce'] = wp_create_nonce( STATUS_BLOCKED_NONCE );
 
 		Management\aj_user_status_update();
 
@@ -246,8 +246,8 @@ class Test_Management extends WP_UnitTestCase {
 		$email = tests_retrieve_phpmailer_instance();
 
 		$_GET['user']         = self::$contributor->ID;
-		$_GET['status']       = 'approve';
-		$_REQUEST['_wpnonce'] = wp_create_nonce( APPROVE_STATUS_NONCE );
+		$_GET['status']       = 'approved';
+		$_REQUEST['_wpnonce'] = wp_create_nonce( STATUS_APPROVED_NONCE );
 
 		Management\aj_user_status_update();
 
