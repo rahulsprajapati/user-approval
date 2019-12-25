@@ -12,10 +12,15 @@ use function User_Approval\get_default_user_role;
 use function User_Approval\get_pre_approved_user_roles;
 use function User_Approval\get_user_status;
 
-use WP_User;
+use const User_Approval\STATUS_APPROVED;
+use const User_Approval\STATUS_APPROVED_NONCE;
+use const User_Approval\STATUS_BLOCKED;
+use const User_Approval\STATUS_BLOCKED_NONCE;
+use const User_Approval\STATUS_META_KEY;
+use const User_Approval\STATUS_PENDING;
+use const User_Approval\STATUS_PRE_APPROVED;
 
-const APPROVE_STATUS_NONCE = 'aj-user-approve';
-const BLOCKED_STATUS_NONCE = 'aj-user-blocked';
+use WP_User;
 
 /**
  * Hook up all the filters and actions.
@@ -44,7 +49,7 @@ function bootstrap() {
  */
 function user_verification_column( $columns ) {
 
-	$columns['aj_user_status'] = esc_html__( 'Status', 'user-approval' );
+	$columns[ STATUS_META_KEY ] = esc_html__( 'Status', 'user-approval' );
 
 	return $columns;
 }
@@ -60,13 +65,13 @@ function user_verification_column( $columns ) {
  */
 function add_user_verification_status( $val, $column_name, $user_id ) {
 
-	if ( 'aj_user_status' !== $column_name ) {
+	if ( STATUS_META_KEY !== $column_name ) {
 		return $val;
 	}
 
-	$user_status = get_user_meta( $user_id, 'aj_user_status', true ) ?: 'pending';
+	$user_status = get_user_meta( $user_id, STATUS_META_KEY, true ) ?: STATUS_PENDING;
 	$user        = get_userdata( $user_id );
-	$user_status = ( ! empty( $user ) && in_array( get_default_user_role(), $user->roles, true ) ) ? $user_status : 'pre-approved';
+	$user_status = ( ! empty( $user ) && in_array( get_default_user_role(), $user->roles, true ) ) ? $user_status : STATUS_PRE_APPROVED;
 
 	return get_user_status( $user_status );
 }
@@ -85,36 +90,36 @@ function add_user_verification_action( $actions, $user ) {
 		return $actions;
 	}
 
-	$user_current_status = get_user_meta( $user->ID, 'aj_user_status', true );
+	$user_current_status = get_user_meta( $user->ID, STATUS_META_KEY, true );
 
 	$query_args = [
 		'user'   => $user->ID,
-		'action' => 'aj_user_status',
-		'status' => 'approve',
+		'action' => STATUS_META_KEY,
+		'status' => STATUS_APPROVED,
 	];
 
 	// Approve action link.
 	$approve_link = add_query_arg( $query_args );
 	$approve_link = remove_query_arg( [ 'new_role' ], $approve_link );
-	$approve_link = wp_nonce_url( $approve_link, APPROVE_STATUS_NONCE );
+	$approve_link = wp_nonce_url( $approve_link, STATUS_APPROVED_NONCE );
 
-	$query_args['status'] = 'block';
+	$query_args['status'] = STATUS_BLOCKED;
 
 	// Block action link.
 	$block_link = add_query_arg( $query_args );
 	$block_link = remove_query_arg( [ 'new_role' ], $block_link );
-	$block_link = wp_nonce_url( $block_link, BLOCKED_STATUS_NONCE );
+	$block_link = wp_nonce_url( $block_link, STATUS_BLOCKED_NONCE );
 
 	$approve_action = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( $approve_link ),
-		get_user_status( 'approved' )
+		get_user_status( STATUS_APPROVED )
 	);
 
 	$block_action = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( $block_link ),
-		get_user_status( 'blocked' )
+		get_user_status( STATUS_BLOCKED )
 	);
 
 	$actions = array_merge( $actions, [
@@ -137,7 +142,7 @@ function aj_user_status_update() {
 	$status  = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
 
 	$user        = get_userdata( $user_id );
-	$user_status = get_user_meta( $user_id, 'aj_user_status', true );
+	$user_status = get_user_meta( $user_id, STATUS_META_KEY, true );
 
 	if (
 		! $user instanceof WP_User
@@ -150,12 +155,12 @@ function aj_user_status_update() {
 
 	$current_user_id = get_current_user_id();
 
-	if ( 'approve' === $status && check_admin_referer( APPROVE_STATUS_NONCE ) ) {
-		update_user_meta( $user_id, 'aj_user_status', 'approved' );
+	if ( STATUS_APPROVED === $status && check_admin_referer( STATUS_APPROVED_NONCE ) ) {
+		update_user_meta( $user_id, STATUS_META_KEY, STATUS_APPROVED );
 		wp_send_new_user_notifications( $user_id, 'user' );
 		update_user_meta( $user_id, 'aj_user_verified_by', $current_user_id );
-	} elseif ( 'block' === $status && check_admin_referer( BLOCKED_STATUS_NONCE ) ) {
-		update_user_meta( $user_id, 'aj_user_status', 'blocked' );
+	} elseif ( STATUS_BLOCKED === $status && check_admin_referer( STATUS_BLOCKED_NONCE ) ) {
+		update_user_meta( $user_id, STATUS_META_KEY, STATUS_BLOCKED );
 		send_user_blocked_email( $user );
 		update_user_meta( $user_id, 'aj_user_verified_by', $current_user_id );
 	}
@@ -272,7 +277,7 @@ function add_user_status_filters( $which ) {
 			}
 			?>
 		</select>
-		<button type="submit" name="filter_action" class="button">Filter</button>
+		<button type="submit" name="filter_action" class="button"><?php esc_html_e( 'Filter', 'user-approval' ) ?></button>
 	</div>
 	<?php
 }
@@ -301,12 +306,12 @@ function filter_user_list_by_status( $args ) {
 		return $args;
 	}
 
-	if ( in_array( $status, [ 'blocked', 'approved' ], true ) ) {
-		$args['meta_key']   = 'aj_user_status'; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
+	if ( in_array( $status, [ STATUS_APPROVED, STATUS_BLOCKED ], true ) ) {
+		$args['meta_key']   = STATUS_META_KEY; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
 		$args['meta_value'] = $status; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_value, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-	} elseif ( 'pending' === $status ) {
+	} elseif ( STATUS_PENDING === $status ) {
 		$args['role']         = get_default_user_role();
-		$args['meta_key']     = 'aj_user_status'; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
+		$args['meta_key']     = STATUS_META_KEY; // phpcs:ignore WordPress.VIP.SlowDBQuery.slow_db_query_meta_key
 		$args['meta_compare'] = 'NOT EXISTS';
 	} else {
 		$user_roles_data = get_pre_approved_user_roles();

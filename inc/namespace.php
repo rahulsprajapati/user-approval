@@ -9,6 +9,14 @@ namespace User_Approval;
 
 use WP_User;
 
+const STATUS_PRE_APPROVED   = 'pre-approved';
+const STATUS_PENDING        = 'pending';
+const STATUS_APPROVED       = 'approved';
+const STATUS_BLOCKED        = 'blocked';
+const STATUS_META_KEY       = 'aj_user_status';
+const STATUS_APPROVED_NONCE = 'aj-user-approve';
+const STATUS_BLOCKED_NONCE  = 'aj-user-blocked';
+
 /**
  * Hook up all the filters and actions.
  */
@@ -91,17 +99,17 @@ function get_pre_approved_user_roles() {
 function get_user_status( $status = '' ) {
 
 	$user_status = [
-		'pre-approved' => esc_html__( 'Pre Approved', 'user-approval' ),
-		'pending'      => esc_html__( 'Pending', 'user-approval' ),
-		'approved'     => esc_html__( 'Approve', 'user-approval' ),
-		'blocked'      => esc_html__( 'Block', 'user-approval' ),
+		STATUS_PRE_APPROVED => esc_html__( 'Pre Approved', 'user-approval' ),
+		STATUS_PENDING      => esc_html__( 'Pending', 'user-approval' ),
+		STATUS_APPROVED     => esc_html__( 'Approve', 'user-approval' ),
+		STATUS_BLOCKED      => esc_html__( 'Block', 'user-approval' ),
 	];
 
 	if ( isset( $user_status[ $status ] ) ) {
 		return $user_status[ $status ];
 	}
 
-	return empty( $status ) ? $user_status['pending'] : $user_status;
+	return empty( $status ) ? $user_status[ STATUS_PENDING ] : $user_status;
 }
 
 /**

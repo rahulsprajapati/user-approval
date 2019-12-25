@@ -12,6 +12,9 @@ use WP_User;
 use function User_Approval\filter_input;
 use function User_Approval\get_default_user_role;
 use function User_Approval\is_default_role_user;
+use const User_Approval\STATUS_APPROVED;
+use const User_Approval\STATUS_BLOCKED;
+use const User_Approval\STATUS_META_KEY;
 
 /**
  * Hook up all the filters and actions.
@@ -48,9 +51,9 @@ function block_non_approved_user_request( $errors ) {
 		return;
 	}
 
-	$user_status = get_user_meta( $user->ID, 'aj_user_status', true );
+	$user_status = get_user_meta( $user->ID, STATUS_META_KEY, true );
 
-	if ( 'approved' !== $user_status ) {
+	if ( STATUS_APPROVED !== $user_status ) {
 		$errors->add(
 			'unapproved_user',
 			__( '<strong>ERROR</strong>: Your account is not active.', 'user-approval' )
@@ -72,14 +75,14 @@ function authenticate_user_by_status( $user ) {
 		return $user;
 	}
 
-	$user_status = get_user_meta( $user->ID, 'aj_user_status', true );
+	$user_status = get_user_meta( $user->ID, STATUS_META_KEY, true );
 
 	switch ( $user_status ) {
-		case 'blocked':
+		case STATUS_BLOCKED:
 			$denied_message = __( '<strong>ERROR</strong>: Your account access has been blocked to this site.', 'user-approval' );
 			$user_data      = new WP_Error( 'blocked_access', $denied_message );
 			break;
-		case 'approved':
+		case STATUS_APPROVED:
 			$user_data = $user;
 			break;
 		default:
