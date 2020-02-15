@@ -101,8 +101,8 @@ function get_user_status( $status = '' ) {
 	$user_status = [
 		STATUS_PRE_APPROVED => esc_html__( 'Pre Approved', 'user-approval' ),
 		STATUS_PENDING      => esc_html__( 'Pending', 'user-approval' ),
-		STATUS_APPROVED     => esc_html__( 'Approve', 'user-approval' ),
-		STATUS_BLOCKED      => esc_html__( 'Block', 'user-approval' ),
+		STATUS_APPROVED     => esc_html__( 'Approved', 'user-approval' ),
+		STATUS_BLOCKED      => esc_html__( 'Blocked', 'user-approval' ),
 	];
 
 	if ( isset( $user_status[ $status ] ) ) {
