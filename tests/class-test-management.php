@@ -120,13 +120,13 @@ class Test_Management extends WP_UnitTestCase {
 
 		$user_row = $wp_list_table->single_row( self::$contributor );
 
-		$this->assertContains( '<td class=\'aj_user_status column-aj_user_status\' data-colname="Status">Block</td>', $user_row );
+		$this->assertContains( '<td class=\'aj_user_status column-aj_user_status\' data-colname="Status">Blocked</td>', $user_row );
 
 		update_user_meta( self::$contributor->ID, 'aj_user_status', 'approved' );
 
 		$user_row = $wp_list_table->single_row( self::$contributor );
 
-		$this->assertContains( '<td class=\'aj_user_status column-aj_user_status\' data-colname="Status">Approve</td>', $user_row );
+		$this->assertContains( '<td class=\'aj_user_status column-aj_user_status\' data-colname="Status">Approved</td>', $user_row );
 	}
 
 	/**
