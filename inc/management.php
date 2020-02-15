@@ -230,7 +230,21 @@ function send_user_blocked_email( $user ) {
 		'headers' => '',
 	];
 
-	$email_data = apply_filters( 'user_approval_blocked_user_email_data', $email_data );
+	/**
+	 * Filters the contents of account blocked notification email sent to the blogger.
+	 *
+	 * @param array   $email_data {
+	 *     Used to build wp_mail().
+	 *
+	 *     @type string $to      The intended recipient - site admin email address.
+	 *     @type string $subject The subject of the email.
+	 *     @type string $message The body of the email.
+	 *     @type string $headers The headers of the email.
+	 * }
+	 * @param WP_User $user     User object for new user.
+	 * @param string  $blogname The site title.
+	 */
+	$email_data = apply_filters( 'user_approval_blocked_user_email_data', $email_data, $user, $blogname );
 
 	// phpcs:ignore WordPressVIPMinimum.VIP.RestrictedFunctions.wp_mail_wp_mail, WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
 	wp_mail(
