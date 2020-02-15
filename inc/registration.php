@@ -84,7 +84,7 @@ function update_new_user_admin_email( $email_data, $user, $blogname ) {
 		$user->user_login
 	);
 
-	$message .= "r\n\r\n";
+	$message .= "\r\n\r\n";
 
 	$message .= sprintf(
 		/* translators: %s: User email address. */
